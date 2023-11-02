@@ -1,17 +1,22 @@
 const { Innertube, UniversalCache } = require("youtubei.js");
-const playlist_type = process.argv[0]
-if (playlist_type == "uma") { 
-  [csv_file,playlist_id] = ["data_uma.csv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"]
-}else {
-  [csv_file,playlist_id] = ["data_yumesute.csv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"]
+const playlist_type = process.argv[2]
+if (playlist_type == "uma") {
+  [csv_file, playlist_id] = ["data_uma.csv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"]
+} else {
+  [csv_file, playlist_id] = ["data_yumesute.csv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"]
 }
 const fs = require("fs");
 let ids = []   //add ids
 fs.readFile(csv_file, "utf-8", (err, data) => {
   if (err) throw err;
-  const lines = data.split("\n");
-  // console.log(lines)
-  ids = lines.map(e => e.split("	")[2].replace("\r", ""))
+  let lines = data.split("\n");
+  console.log(lines)
+  lines = lines.map(line => {
+    if (line.includes("youtube.com")) {
+      line.replace(/https:\/\/www.youtube.com\/watch?v=(.*?).*/, "0  0  $1")
+    }
+  })
+  ids = lines.map(e => e?.split("  ")[2]?.replace("\r", ""))
 });
 
 (async () => {
@@ -37,11 +42,17 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
 
   await yt.session.oauth.cacheCredentials();
 
-  // const playlist = await yt.getPlaylist("PLXQE_C7He7f-8x004izcc7VUoapJqVcii")
-  // const item_ids = playlist.items.map(i => i.id)
+  let playlist = await yt.getPlaylist(playlist_id)
+  let item_ids = playlist.items.map(i => i.id)
+  // while (playlist.has_continuation) {
+  //   playlist = await playlist.getContinuation()
 
-  await yt.playlist.removeVideos('PLXQE_C7He7f-8x004izcc7VUoapJqVcii', item_ids);
+  //   item_ids.push(...playlist.items.map(i => i.id))
+  // }
 
+  // await yt.playlist.removeVideos(playlist_id, item_ids);
+
+  // console.log(item_ids)
 
 
 
