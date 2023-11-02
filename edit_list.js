@@ -13,7 +13,7 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
   console.log(lines)
   lines = lines.map(line => {
     if (line.includes("youtube.com")) {
-      line.replace(/https:\/\/www.youtube.com\/watch?v=(.*?).*/, "0  0  $1")
+      return line.replace(/https:\/\/www\.youtube.com\/watch\?v=(.*?)&.*/, "0  0  $1")
     }
   })
   ids = lines.map(e => e?.split("  ")[2]?.replace("\r", ""))
@@ -42,8 +42,8 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
 
   await yt.session.oauth.cacheCredentials();
 
-  let playlist = await yt.getPlaylist(playlist_id)
-  let item_ids = playlist.items.map(i => i.id)
+  // let playlist = await yt.getPlaylist(playlist_id)
+  // let item_ids = playlist.items.map(i => i.id)
   // while (playlist.has_continuation) {
   //   playlist = await playlist.getContinuation()
 
