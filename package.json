@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "youtubei.js": "^6.3.0"
+    "youtubei.js": "^8.0.0"
   },
   "name": "youtube-playlist",
   "version": "1.0.0",

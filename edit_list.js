@@ -1,9 +1,9 @@
 const { Innertube, UniversalCache } = require("youtubei.js");
 const playlist_type = process.argv[2]
 if (playlist_type == "uma") {
-  [csv_file, playlist_id] = ["data_uma.csv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"]
+  [csv_file, playlist_id] = ["data_uma.tsv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"]
 } else {
-  [csv_file, playlist_id] = ["data_yumesute.csv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"]
+  [csv_file, playlist_id] = ["data_yumesute.tsv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"]
 }
 const fs = require("fs");
 let ids = []   //add ids
@@ -13,10 +13,10 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
   console.log(lines)
   lines = lines.map(line => {
     if (line.includes("youtube.com")) {
-      return line.replace(/https:\/\/www\.youtube.com\/watch\?v=(.*?)&.*/, "0  0  $1")
-    }
+      return line.replace(/https:\/\/www\.youtube.com\/watch\?v=(.*?)&.*/, "0\t0\t$1")
+    } else { return line }
   })
-  ids = lines.map(e => e?.split("  ")[2]?.replace("\r", ""))
+  ids = lines.map(e => e?.split("	")[2])
 });
 
 (async () => {
@@ -42,17 +42,19 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
 
   await yt.session.oauth.cacheCredentials();
 
-  // let playlist = await yt.getPlaylist(playlist_id)
-  // let item_ids = playlist.items.map(i => i.id)
-  // while (playlist.has_continuation) {
-  //   playlist = await playlist.getContinuation()
+  //すでにある要素を削除
+  let playlist = await yt.getPlaylist(playlist_id)
+  let item_ids = playlist.items.map(i => i.id)
+  if (item_ids.length == 100) {
+    while (playlist.has_continuation) {
+      playlist = await playlist.getContinuation()
 
-  //   item_ids.push(...playlist.items.map(i => i.id))
-  // }
+      item_ids.push(...playlist.items.map(i => i.id))
+    }
+  }
+  await yt.playlist.removeVideos(playlist_id, item_ids);
 
-  // await yt.playlist.removeVideos(playlist_id, item_ids);
-
-  // console.log(item_ids)
+  console.log(item_ids)
 
 
 

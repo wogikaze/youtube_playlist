@@ -2,9 +2,9 @@ const { Innertube, UniversalCache } = require("youtubei.js");
 const playlist_type = process.argv[2]
 console.log(playlist_type)
 if (playlist_type == "uma") {
-    [csv_file, playlist_id] = ["data_uma.csv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"]
+    [csv_file, playlist_id] = ["data_uma.tsv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"]
 } else {
-    [csv_file, playlist_id] = ["data_yumesute.csv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"]
+    [csv_file, playlist_id] = ["data_yumesute.tsv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"]
 }
 const fs = require("fs");
 
@@ -14,12 +14,14 @@ const fs = require("fs");
     });
     let index = 0
     let playlist = await yt.getPlaylist(playlist_id)
-    let item_ids = playlist.items.map((i) => { index++; return `${index}  ${i.title}  ${i.id}`;  })
+    let item_ids = playlist.items.map((i) => { index++; return `${index}	${i.title}	${i.id}`; })
     console.log(item_ids)
-    while (playlist.has_continuation) {
-        playlist = await playlist.getContinuation()
+    if (item_ids.length == 100) {
+        while (playlist.has_continuation) {
+            playlist = await playlist.getContinuation()
 
-        item_ids.push(...playlist.items.map((i) => { index++; return `${index}  ${i.title}  ${i.id}`;  }))
+            item_ids.push(...playlist.items.map((i) => { index++; return `${index}	${i.title}	${i.id}`; }))
+        }
     }
 
     fs.writeFile(csv_file, item_ids.join("\n"), (err) => {
@@ -32,6 +34,6 @@ const fs = require("fs");
 })();
 
 // ユメステ
-// https://www.youtube.com/playlist?list=PLXQE_C7He7f-8x004izcc7VUoapJqVcii
+// PLXQE_C7He7f-8x004izcc7VUoapJqVcii
 // ウマ娘
 // PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3
