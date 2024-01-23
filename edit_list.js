@@ -2,8 +2,10 @@ const { Innertube, UniversalCache } = require("youtubei.js");
 const playlist_type = process.argv[2]
 if (playlist_type == "uma") {
   [csv_file, playlist_id] = ["data_uma.tsv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"]
-} else {
+} else if (playlist_type == "yume"){
   [csv_file, playlist_id] = ["data_yumesute.tsv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"]
+} else if (playlist_type == "umaost"){
+  [csv_file, playlist_id] = ["data_umaost.tsv", "PLXQE_C7He7f_XHyR-qrqV8maID8emw3Xb"]
 }
 const fs = require("fs");
 let ids = []   //add ids
@@ -66,3 +68,5 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
 // PLXQE_C7He7f-8x004izcc7VUoapJqVcii
 // ウマ娘
 // PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3
+// ウマ娘OST
+// PLXQE_C7He7f_XHyR-qrqV8maID8emw3Xb
