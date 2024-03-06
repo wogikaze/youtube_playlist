@@ -15,7 +15,7 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
   console.log(lines)
   lines = lines.map(line => {
     if (line.includes("youtube.com")) {
-      return line.replace(/https:\/\/www\.youtube.com\/watch\?v=(.*?)&.*/, "0\t0\t$1")
+      return line.replace(/https:\/\/www\.youtube.com\/watch\?v=(.*?)(&.*|$)/, "0\t0\t$1")
     } else { return line }
   })
   ids = lines.map(e => e?.split("	")[2])

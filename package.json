@@ -8,7 +8,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node edit_list.js",
-    "run": "node edit_list.js"
+    "run": "node edit_list.js",
+    "pull":"node get_playlist.js",
+    "push":"node edit_list.js"
   },
   "author": "",
   "license": "ISC",
