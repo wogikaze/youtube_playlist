@@ -12,7 +12,7 @@ let ids = [];   //add ids
 fs.readFile(csv_file, "utf-8", (err, data) => {
   if (err) throw err;
   let lines = data.split("\n");
-  console.log(lines);
+  // console.log(lines);
   lines = lines.map(line => {
     if (line.includes("youtube.com")) {
       return line.replace(/https:\/\/www\.youtube.com\/watch\?v=(.*?)(&.*|$)/, "0\t0\t$1");
@@ -23,27 +23,27 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
 
 (async () => {
   const yt = await Innertube.create({
-    cache: new UniversalCache(false),
-    generate_session_locally: true,
+    // cache: new UniversalCache(false),
+    // generate_session_locally: true,
+    cookie: process.env.cookie
   });
+
+  // 'auth-pending' is fired with the info needed to sign in via OAuth.
+  // yt.session.on('auth-pending', (data) => {
+  //   console.log(`Go to ${data.verification_url} in your browser and enter code ${data.user_code} to authenticate.`);
+  // });
+
+  // yt.session.on('auth', ({ credentials }) => {
+  //   console.log('Sign in successful:', credentials);
+  // });
+
+  // yt.session.on('update-credentials', ({ credentials }) => {
+  //   console.log('Credentials updated:', credentials);
+  // });
+
+  // await yt.session.signIn();
 
   // await yt.session.oauth.cacheCredentials();
-  // 'auth-pending' is fired with the info needed to sign in via OAuth.
-  yt.session.on('auth-pending', (data) => {
-    console.log(`Go to ${data.verification_url} in your browser and enter code ${data.user_code} to authenticate.`);
-  });
-
-  yt.session.on('auth', ({ credentials }) => {
-    console.log('Sign in successful:', credentials);
-  });
-
-  yt.session.on('update-credentials', ({ credentials }) => {
-    console.log('Credentials updated:', credentials);
-  });
-
-  await yt.session.signIn();
-
-  await yt.session.oauth.cacheCredentials();
 
   //すでにある要素を削除
   let playlist = await yt.getPlaylist(playlist_id);
@@ -57,11 +57,11 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
   }
   await yt.playlist.removeVideos(playlist_id, item_ids);
 
-  console.log(item_ids);
+  // console.log(item_ids);
 
 
 
-  console.log(ids);
+  // console.log(ids);
   await yt.playlist.addVideos(playlist_id, ids);
 })();
 
