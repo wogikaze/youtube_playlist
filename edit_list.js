@@ -58,9 +58,7 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
   await yt.playlist.removeVideos(playlist_id, item_ids);
 
   // console.log(item_ids);
-
-
-
+  
   // console.log(ids);
   await yt.playlist.addVideos(playlist_id, ids);
 })();
