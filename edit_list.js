@@ -1,4 +1,6 @@
 const { Innertube, UniversalCache } = require("youtubei.js");
+require('dotenv').config()
+
 const playlist_type = process.argv[2];
 if (playlist_type == "uma") {
   [csv_file, playlist_id] = ["data_uma.tsv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"];
@@ -25,9 +27,9 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
   const yt = await Innertube.create({
     // cache: new UniversalCache(false),
     // generate_session_locally: true,
-    cookie: process.env.cookie
+    cookie: process.env.COOKIE
   });
-
+  console.log(process.env.COOKIE)
   // 'auth-pending' is fired with the info needed to sign in via OAuth.
   // yt.session.on('auth-pending', (data) => {
   //   console.log(`Go to ${data.verification_url} in your browser and enter code ${data.user_code} to authenticate.`);
@@ -59,7 +61,7 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
 
   // console.log(item_ids);
   
-  // console.log(ids);
+  console.log(ids);
   await yt.playlist.addVideos(playlist_id, ids);
 })();
 
