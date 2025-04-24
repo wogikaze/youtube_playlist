@@ -1,4 +1,6 @@
 const { Innertube, UniversalCache } = require("youtubei.js");
+require('dotenv').config()
+
 const playlist_type = process.argv[2];
 console.log(playlist_type);
 if (playlist_type == "uma") {
@@ -21,7 +23,8 @@ const fs = require("fs");
 
 (async () => {
     const yt = await Innertube.create({
-        cache: new UniversalCache(false), generate_session_locally: true,
+        // cache: new UniversalCache(false), generate_session_locally: true,
+        cookie: process.env.COOKIE
     });
     let index = 0;
     let playlist = await yt.getPlaylist(playlist_id);
