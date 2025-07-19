@@ -14,7 +14,7 @@
             "args": [
                 "uma"
             ],
-            "program": "${workspaceFolder}\\edit_list.js"
+            "program": "${workspaceFolder}\\${file}"
         }
     ]
 }

@@ -25,25 +25,25 @@ fs.readFile(csv_file, "utf-8", (err, data) => {
 
 (async () => {
   const yt = await Innertube.create({
-    // cache: new UniversalCache(false),
+    cache: new UniversalCache(false),
     // generate_session_locally: true,
-    cookie: process.env.COOKIE
+    // cookie: process.env.COOKIE
   });
-  console.log(process.env.COOKIE)
+  // console.log(process.env.COOKIE)
   // 'auth-pending' is fired with the info needed to sign in via OAuth.
-  // yt.session.on('auth-pending', (data) => {
-  //   console.log(`Go to ${data.verification_url} in your browser and enter code ${data.user_code} to authenticate.`);
-  // });
+  yt.session.on('auth-pending', (data) => {
+    console.log(`Go to ${data.verification_url} in your browser and enter code ${data.user_code} to authenticate.`);
+  });
 
-  // yt.session.on('auth', ({ credentials }) => {
-  //   console.log('Sign in successful:', credentials);
-  // });
+  yt.session.on('auth', ({ credentials }) => {
+    console.log('Sign in successful:', credentials);
+  });
 
-  // yt.session.on('update-credentials', ({ credentials }) => {
-  //   console.log('Credentials updated:', credentials);
-  // });
+  yt.session.on('update-credentials', ({ credentials }) => {
+    console.log('Credentials updated:', credentials);
+  });
 
-  // await yt.session.signIn();
+  await yt.session.signIn();
 
   // await yt.session.oauth.cacheCredentials();
 
