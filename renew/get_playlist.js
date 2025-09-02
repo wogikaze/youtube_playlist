@@ -1,8 +1,10 @@
-const { Innertube, UniversalCache } = require("youtubei.js");
-require('dotenv').config()
+import 'dotenv/config'
+import { Innertube, UniversalCache } from "youtubei.js";
+import fs from "fs";
 
 const playlist_type = process.argv[2];
 console.log(playlist_type);
+let reg, csv_file, playlist_id;
 if (playlist_type == "uma") {
     [csv_file, playlist_id] = ["data_uma.tsv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"];
 } else if (playlist_type == "yume") {
@@ -17,9 +19,7 @@ if (playlist_type == "uma") {
     csv_file = "";
     playlist_id = "PLNv8UdsukO8AnXbb58ANWhuWPQG3AOO6h";
     console.error("hmm?");
-    return;
 }
-const fs = require("fs");
 
 (async () => {
     const yt = await Innertube.create({
