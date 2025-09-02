@@ -17,7 +17,6 @@ if (playlist_type == "uma") {
     csv_file = "";
     playlist_id = "PLNv8UdsukO8AnXbb58ANWhuWPQG3AOO6h";
     console.error("hmm?");
-    return;
 }
 const fs = require("fs");
 
