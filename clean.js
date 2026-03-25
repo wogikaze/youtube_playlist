@@ -8,15 +8,15 @@ const playlist_type = process.argv[2];
 console.log(playlist_type);
 let csv_file, playlist_id;
 if (playlist_type == "uma") {
-  [csv_file, playlist_id] = ["data_uma.tsv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"];
+  [csv_file, playlist_id] = ["./data/data_uma.tsv", "PLXQE_C7He7f9MKGP11OpI8jw187fOgg_3"];
 } else if (playlist_type == "yume") {
-  [csv_file, playlist_id] = ["data_yumesute.tsv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"];
+  [csv_file, playlist_id] = ["./data/data_yumesute.tsv", "PLXQE_C7He7f-8x004izcc7VUoapJqVcii"];
 } else if (playlist_type == "umaost") {
-  [csv_file, playlist_id] = ["data_umaost.tsv", "PLXQE_C7He7f_XHyR-qrqV8maID8emw3Xb"];
+  [csv_file, playlist_id] = ["./data/data_umaost.tsv", "PLXQE_C7He7f_XHyR-qrqV8maID8emw3Xb"];
 } else if (playlist_type.includes("https://www.youtube.com/playlist?list")) {
   const reg = /playlist\?list=(.*?)($|&)/g;
   playlist_id = [...playlist_type.matchAll(reg)][0][1];
-  csv_file = "temp.tsv";
+  csv_file = "./data/temp.tsv";
 } else {
   csv_file = "";
   playlist_id = "PLNv8UdsukO8AnXbb58ANWhuWPQG3AOO6h";
