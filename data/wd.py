@@ -34,8 +34,9 @@ JS = r"""
 
 options = webdriver.ChromeOptions()
 options.add_argument(
-    "--user-data-dir=C:/Users/Wogikaze/AppData/Local/Google/Chrome/SeleniumProfile"
+    r"--user-data-dir=C:\Users\Wogikaze\AppData\Local\Google\Chrome\SeleniumProfile"
 )
+options.add_argument("--profile-directory=Default")  # 念のため明示
 driver = webdriver.Chrome(options=options)
 
 
