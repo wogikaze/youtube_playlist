@@ -59,7 +59,7 @@ ids = lines.map(e => e?.split("\t")[2]).filter(Boolean);
             item_ids.push(...playlist.items.map(i => i.id));
         }
     }
-    // await yt.playlist.removeVideos(playlist_id, item_ids);
+    await yt.playlist.removeVideos(playlist_id, item_ids);
 
     // console.log(item_ids);
 
