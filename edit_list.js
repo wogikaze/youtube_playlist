@@ -50,13 +50,17 @@ ids = lines.map(e => e?.split("\t")[2]).filter(Boolean);
     // await yt.session.oauth.cacheCredentials();
 
     //すでにある要素を削除
+    function getVideoId(item) {
+        return item.id || item.content_id || item.entity_id;
+    }
+
     let playlist = await yt.getPlaylist(playlist_id);
-    let item_ids = playlist.items.map(i => i.id);
+    let item_ids = playlist.items.map(i => getVideoId(i)).filter(Boolean);
     if (item_ids.length == 100) {
         while (playlist.has_continuation) {
             playlist = await playlist.getContinuation();
 
-            item_ids.push(...playlist.items.map(i => i.id));
+            item_ids.push(...playlist.items.map(i => getVideoId(i)).filter(Boolean));
         }
     }
     await yt.playlist.removeVideos(playlist_id, item_ids);

@@ -7,7 +7,7 @@
     "googleapis": "^150.0.1",
     "open": "^10.1.2",
     "undici": "^7.25.0",
-    "youtubei.js": "^17.0.1"
+    "youtubei.js": "^17.2.0"
   },
   "name": "youtube-playlist",
   "version": "1.0.0",

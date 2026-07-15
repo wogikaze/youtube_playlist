@@ -27,6 +27,17 @@
 - `Text` の import 漏れを修正。
   - `import Text from './misc/Text.js';`
 
+### 3) PlaylistManager.removeVideos の LockupView 対応
+対象ファイル:
+- `node_modules/youtubei.js/dist/src/core/managers/PlaylistManager.js`
+
+変更点:
+- `getPlaylist` をパース済みではなく raw レスポンスから生成するよう修正（continuation が取得できるように）。
+- `is_editable` が `false` でも処理を継続するよう変更。
+- `PlaylistVideo` だけでなく `LockupView` / `ShortsLockupView` / `ReelItem` などの id 取得に `id` / `content_id` / `entity_id` を使えるよう頑健化。
+- 削除アクションに `removedVideoId` を追加し、`set_video_id` があれば併記するように変更。
+- 続きがない場合に `getContinuation` を呼ばないように修正。
+
 ## 実行時のアカウント選択
 
 `edit_list.js` は以下の方針です:

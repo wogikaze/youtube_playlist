@@ -26,15 +26,29 @@ if (playlist_type == "uma") {
         // cache: new UniversalCache(false), generate_session_locally: true,
         cookie: process.env.COOKIE
     });
+    function extractVideo(item) {
+        const title = item.title || item.metadata?.title || item.overlay_metadata?.primary_text;
+        const id = item.id || item.content_id || item.entity_id;
+        return { title: title ? String(title) : '', id: id ? String(id) : '' };
+    }
+
     let index = 0;
     let playlist = await yt.getPlaylist(playlist_id);
-    let item_ids = playlist.items.map((i) => { index++; return `${index}	${i.title}	${i.id}`; });
+    let item_ids = playlist.items.map((i) => {
+        index++;
+        const { title, id } = extractVideo(i);
+        return `${index}	${title}	${id}`;
+    });
     console.log(item_ids);
     if (item_ids.length == 100) {
         while (playlist.has_continuation) {
             playlist = await playlist.getContinuation();
 
-            item_ids.push(...playlist.items.map((i) => { index++; return `${index}	${i.title}	${i.id}`; }));
+            item_ids.push(...playlist.items.map((i) => {
+                index++;
+                const { title, id } = extractVideo(i);
+                return `${index}	${title}	${id}`;
+            }));
         }
     }
     console.log(item_ids.join("\n"));
