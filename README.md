@@ -1,64 +1,78 @@
 # youtube_playlist
 
+ローカル TSV と YouTube プレイリストを同期する小さな CLI。
+
+## 構成
+
+```
+lib/           # playlists / tsv / youtube（共有ロジック）
+push.js        # TSV → プレイリスト反映
+pull.js        # プレイリスト → TSV 取得
+clean.js       # TSV 正規化（行番号振り直し・URLからタイトル取得）
+data/          # *.tsv
+scripts/       # 検索など単発ツール
+```
+
+## 使い方
+
+```bash
+# 反映（既存を消して TSV の ID を追加）
+npm run push -- yume
+# または
+node push.js yume
+node edit_list.js yume   # 互換ラッパー
+
+# 取得
+npm run pull -- yume
+node pull.js yume
+
+# TSV 整形
+npm run clean -- yume
+```
+
+対象名: `uma` | `yume` | `umaost` | プレイリスト URL
+
+## 環境変数
+
+```env
+COOKIE="..."
+ACCOUNT_INDEX=2
+```
+
+`ACCOUNT_INDEX` 未指定時は `2`（`x-goog-authuser: 2` 相当）。
+
 ## 注意: node_modules を手修正しています
 
 このリポジトリは `node_modules` 内の `youtubei.js` を直接修正しています。
 そのため、別デバイスで作業する場合や `npm install` 後は、同じ修正を再適用しないと挙動が変わる可能性があります。
 
-## 現在入っている手修正
+### 現在入っている手修正
 
-### 1) PlaylistManager の修正
-対象ファイル:
-- `node_modules/youtubei.js/dist/src/core/managers/PlaylistManager.js`
+#### 1) PlaylistManager の修正
+対象: `node_modules/youtubei.js/dist/src/core/managers/PlaylistManager.js`
 
-変更点:
-- `addVideos`:
-  - 例外を握りつぶさず、失敗時にデバッグ情報を `console.error` 出力して再 throw。
-- `removeVideos`:
-  - `is_editable` が false でも処理継続（YouTube 側のメタが不正確なケース対策）。
-  - `id` / `video_id` / `set_video_id` の取り方を頑健化。
-  - マッチ 0 件時のフォールバック処理を追加。
+- `addVideos`: 失敗時にデバッグ出力して再 throw
+- `removeVideos`: `is_editable` が false でも継続、id 取得の頑健化、マッチ 0 件フォールバック
 
-### 2) ToggleFormField の修正
-対象ファイル:
-- `node_modules/youtubei.js/dist/src/parser/classes/ToggleFormField.js`
+#### 2) ToggleFormField の修正
+対象: `node_modules/youtubei.js/dist/src/parser/classes/ToggleFormField.js`
 
-変更点:
-- `Text` の import 漏れを修正。
-  - `import Text from './misc/Text.js';`
+- `import Text from './misc/Text.js';` を追加
 
-### 3) PlaylistManager.removeVideos の LockupView 対応
-対象ファイル:
-- `node_modules/youtubei.js/dist/src/core/managers/PlaylistManager.js`
+#### 3) PlaylistManager.removeVideos の LockupView 対応
+対象: 同上 PlaylistManager.js
 
-変更点:
-- `getPlaylist` をパース済みではなく raw レスポンスから生成するよう修正（continuation が取得できるように）。
-- `is_editable` が `false` でも処理を継続するよう変更。
-- `PlaylistVideo` だけでなく `LockupView` / `ShortsLockupView` / `ReelItem` などの id 取得に `id` / `content_id` / `entity_id` を使えるよう頑健化。
-- 削除アクションに `removedVideoId` を追加し、`set_video_id` があれば併記するように変更。
-- 続きがない場合に `getContinuation` を呼ばないように修正。
+- raw レスポンスから Playlist 生成（continuation 取得用）
+- `LockupView` 等の id 取得対応
+- 削除アクションに `removedVideoId` 追加
 
-## 実行時のアカウント選択
+## 別デバイスでの手順
 
-`edit_list.js` は以下の方針です:
-- `ACCOUNT_INDEX` が未指定なら `2` を使う（`x-goog-authuser: 2` 相当）。
-- 必要なら `.env` で `ACCOUNT_INDEX` を明示してください。
+1. clone
+2. `npm install`
+3. 上記手修正を `node_modules` に再適用
+4. `.env` に `COOKIE`（と必要なら `ACCOUNT_INDEX`）を設定
 
-例:
+## 将来案
 
-```env
-ACCOUNT_INDEX=2
-COOKIE="..."
-```
-
-## 別デバイスで作業する場合の手順
-
-1. このリポジトリを clone する
-2. `npm install` する
-3. この README の「現在入っている手修正」を `node_modules` に再適用する
-4. `.env` を用意し、`COOKIE` と必要なら `ACCOUNT_INDEX=2` を設定する
-
-## 将来的な改善案
-
-- `patch-package` を使って、`node_modules` 修正を自動適用化する
-  - 手修正の再作業をなくせるため、別デバイスでも再現しやすくなります。
+- `patch-package` で youtubei.js 手修正を自動適用
