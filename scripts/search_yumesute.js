@@ -264,6 +264,23 @@ const TRACKS = [
   { title: "（Vol.11 未発表 3）", skipSearch: true },
   { title: "（Vol.11 未発表 4）", skipSearch: true },
   { title: "（Vol.11 未発表 5）", skipSearch: true },
+
+  // Vol.12 / 最終章
+  { title: "カルペ・ディエム" },
+  { title: "アンチ・サニーデイズ・カレンダー" },
+  { title: "Vivid-day Happy-day Boost!" },
+  { title: "八躯モ断ツ剣ノ傍デ" },
+  { title: "FUN×FUN☆SEEKER!!", query: "FUN×FUN☆SEEKER!! ユメステ" },
+  { title: "The other side of the mirror", query: "The other side of the mirror ユメステ" },
+  { title: "私の愛は愛を殺す" },
+  { title: "Besties' Place!" },
+  { title: "ふろうてぃんぐ・ていすてぃ" },
+  { title: "非対称性のダンス" },
+  { title: "Fly to the WORLD" },
+  { title: "雨に願えば" },
+  { title: "Make New Testament" },
+  { title: "LIVE OUR STAR" },
+  { title: "LIFE IS BEAUTIFUL STAGE" },
 ];
 
 function loadExistingIds() {
@@ -334,7 +351,7 @@ function scoreCandidate(trackTitle, video) {
   if (!title) return -Infinity;
 
   // reject loops / mashups / chart videos / student shorts
-  if (/1時間|１時間|耐久|メドレー|歌ってみた|cover|カバー|耳コピ|譜面|STELLA\s*\d+|HAL名古屋|チーム/i.test(title)) return -Infinity;
+  if (/1時間|１時間|耐久|メドレー|歌ってみた|cover|カバー|耳コピ|譜面|プレイ映像|プレイ動画|デモプレイ|STELLA\s*\d+|HAL名古屋|チーム/i.test(title)) return -Infinity;
   if (dur != null && dur >= 20 * 60) return -Infinity;
   // vocal full-length preference: reject short non-Topic clips (<2:30) unless TV size / scene / OST-ish
   const allowShort =
@@ -405,8 +422,8 @@ function sleep(ms) {
 }
 
 async function main() {
-  if (TRACKS.length !== 228) {
-    console.warn(`[warn] track count is ${TRACKS.length}, expected 228`);
+  if (TRACKS.length !== 243) {
+    console.warn(`[warn] track count is ${TRACKS.length}, expected 243`);
   }
 
   const existing = loadExistingIds();
