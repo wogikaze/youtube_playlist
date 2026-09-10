@@ -6,13 +6,14 @@ console.log(`[clean] ${arg}`);
 const target = resolvePlaylist(arg);
 const rows = readRows(target.file);
 
-const needFetch = rows.some((r) => r.id && !r.title);
+// Always refresh titles from YouTube so renamed videos and imported titles stay current.
+const needFetch = rows.some((r) => r.id);
 if (needFetch) {
   const { Innertube } = await import("youtubei.js");
   const yt = await Innertube.create({});
   await Promise.all(
     rows.map(async (row) => {
-      if (!row.id || row.title) return;
+      if (!row.id) return;
       try {
         const info = await yt.getInfo(row.id);
         row.title = (info.basic_info.title || "").replace(/\t|\n/g, " ");

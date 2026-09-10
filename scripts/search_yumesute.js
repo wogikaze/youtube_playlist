@@ -6,7 +6,7 @@ const CACHE = "./data/.yumesute_search_cache.json";
 const DELAY_MS = 800;
 
 /** @type {{ title: string, query?: string, skipSearch?: boolean }[]} */
-const TRACKS = [
+const ALL_TRACKS = [
   // 1. OP/ED
   { title: "ワナビスタ！" },
   { title: "トゥ・オブ・アス" },
@@ -69,7 +69,6 @@ const TRACKS = [
   { title: "竹取物語 scene1", query: "竹取物語 scene1 ワールドダイスター" },
   { title: "竹取物語 scene2", query: "竹取物語 scene2 ワールドダイスター" },
   { title: "勿忘唄（TV size）", query: "勿忘唄 TV size" },
-  { title: "夢見月夜（TV size）", query: "夢見月夜 TV size" },
   { title: "悠久月華（TV size）", query: "悠久月華 TV size" },
   { title: "ハムレット scene1", query: "ハムレット scene1 ワールドダイスター" },
   { title: "アラビアンナイト scene1", query: "アラビアンナイト scene1 ワールドダイスター" },
@@ -99,7 +98,6 @@ const TRACKS = [
   { title: "Farewell song（TV size）", query: "Farewell song TV size ワールドダイスター" },
   { title: "トゥ・オブアス（アレンジver）", query: "トゥ・オブ・アス アレンジ ワールドダイスター" },
   { title: "トゥ・オブアス（TV size）", query: "トゥ・オブ・アス TV size" },
-  { title: "夢見月夜（TV size）", query: "夢見月夜 TV size" }, // Disc2 #37 duplicate listing
 
   // Vol.1
   { title: "プラネタリウム・レヴュー" },
@@ -251,46 +249,40 @@ const TRACKS = [
   { title: "エクストラ・エキストラ！ -Extra Extra-" },
   { title: "Worlds Dye Star（千寿 暦 Version）", query: "Worlds Dye Star 千寿 暦" },
 
-  // Vol.11（発表済み7 + 未発表5）
+  // Vol.11「デアエ・エクス・マキナ！ Act-3」確定12曲
   { title: "劇団電姫すいっちおん！" },
   { title: "ナツのキオクのナイショのホンネ！" },
   { title: "錆びついた胸に一雫の心を" },
   { title: "空っぽのギフトボックス" },
-  { title: "Worlds Dye Star", query: "Worlds Dye Star 劇団電姫 ワールドダイスター" },
+  { title: "Besties' Place!" },
+  { title: "Fly to the WORLD" },
+  { title: "FUN×FUN☆SEEKER!!", query: "FUN×FUN☆SEEKER!! ユメステ" },
+  { title: "The other side of the mirror", query: "The other side of the mirror ユメステ" },
+  { title: "ふろうてぃんぐ・ていすてぃ" },
   { title: "ELECTRIC PRINCESS!" },
   { title: "ニア・ディア・ユア・ドリーム" },
-  { title: "（Vol.11 未発表 1）", skipSearch: true },
-  { title: "（Vol.11 未発表 2）", skipSearch: true },
-  { title: "（Vol.11 未発表 3）", skipSearch: true },
-  { title: "（Vol.11 未発表 4）", skipSearch: true },
-  { title: "（Vol.11 未発表 5）", skipSearch: true },
+  { title: "Worlds Dye Star", query: "Worlds Dye Star 千寿いろは" },
 
-  // Vol.12 / 最終章
+  // Vol.12候補（2026-09-11時点。収録曲としては未確定）
   { title: "カルペ・ディエム" },
   { title: "アンチ・サニーデイズ・カレンダー" },
   { title: "Vivid-day Happy-day Boost!" },
   { title: "八躯モ断ツ剣ノ傍デ" },
-  { title: "FUN×FUN☆SEEKER!!", query: "FUN×FUN☆SEEKER!! ユメステ" },
-  { title: "The other side of the mirror", query: "The other side of the mirror ユメステ" },
   { title: "私の愛は愛を殺す" },
-  { title: "Besties' Place!" },
-  { title: "ふろうてぃんぐ・ていすてぃ" },
   { title: "非対称性のダンス" },
-  { title: "Fly to the WORLD" },
-  { title: "雨に願えば" },
+  { title: "雨に願えば", query: "雨に願えば ワールドダイスター" },
   { title: "Make New Testament" },
-  { title: "LIVE OUR STAR" },
-  { title: "LIFE IS BEAUTIFUL STAGE" },
+
 ];
 
+const TRACKS = ALL_TRACKS.slice(0, 13).concat(ALL_TRACKS.slice(84));
+
 function loadExistingIds() {
-  const map = new Map();
-  if (!fs.existsSync(OUT)) return map;
-  for (const line of fs.readFileSync(OUT, "utf8").split(/\r?\n/)) {
-    const cols = line.split("\t");
-    if (cols.length >= 3 && cols[1] && cols[2]) map.set(cols[1].trim(), cols[2].trim());
-  }
-  return map;
+  if (!fs.existsSync(OUT)) return [];
+  return fs.readFileSync(OUT, "utf8")
+    .split(/\r?\n/)
+    .filter((line) => line.trim() !== "")
+    .map((line) => line.split("\t")[2]?.trim() || "");
 }
 
 function loadCache() {
@@ -422,8 +414,8 @@ function sleep(ms) {
 }
 
 async function main() {
-  if (TRACKS.length !== 243) {
-    console.warn(`[warn] track count is ${TRACKS.length}, expected 243`);
+  if (TRACKS.length !== 163) {
+    console.warn(`[warn] track count is ${TRACKS.length}, expected 163`);
   }
 
   const existing = loadExistingIds();
@@ -440,7 +432,7 @@ async function main() {
     const n = i + 1;
     const cached = cache[track.title];
     let id = "";
-    if (existing.get(track.title)) id = existing.get(track.title);
+    if (existing[n - 1]) id = existing.get(track.title);
     else if (cached?.id && cached.score >= 40 && !cached.note) id = cached.id;
 
     if (!id && !track.skipSearch) {
