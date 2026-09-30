@@ -273,6 +273,11 @@ const ALL_TRACKS = [
   { title: "雨に願えば", query: "雨に願えば ワールドダイスター" },
   { title: "Make New Testament" },
 
+  // 2026-09-30追加（ゲーム内追加 2026/06/30〜07/20、アルバム未収録）
+  { title: "LIVE OUR STAR", query: "LIVE OUR STAR 鳳ここな 静香" },
+  { title: "LIFE IS BEAUTIFUL STAGE", query: "LIFE IS BEAUTIFUL STAGE ワールドダイスター" },
+  { title: "ワールドダイスター！", query: "ワールドダイスター！ 鳳ここな 静香" },
+
 ];
 
 const TRACKS = ALL_TRACKS.slice(0, 13).concat(ALL_TRACKS.slice(84));
@@ -414,8 +419,8 @@ function sleep(ms) {
 }
 
 async function main() {
-  if (TRACKS.length !== 163) {
-    console.warn(`[warn] track count is ${TRACKS.length}, expected 163`);
+  if (TRACKS.length !== 166) {
+    console.warn(`[warn] track count is ${TRACKS.length}, expected 166`);
   }
 
   const existing = loadExistingIds();
