@@ -5,7 +5,7 @@ const OUT = "./data/data_yumesute.tsv";
 const CACHE = "./data/.yumesute_search_cache.json";
 const DELAY_MS = 800;
 
-/** @type {{ title: string, query?: string, skipSearch?: boolean }[]} */
+/** @type {{ title: string, id?: string, query?: string, skipSearch?: boolean }[]} */
 const ALL_TRACKS = [
   // 1. OP/ED
   { title: "ワナビスタ！" },
@@ -263,20 +263,20 @@ const ALL_TRACKS = [
   { title: "ニア・ディア・ユア・ドリーム" },
   { title: "Worlds Dye Star", query: "Worlds Dye Star 千寿いろは" },
 
-  // Vol.12候補（2026-09-11時点。収録曲としては未確定）
-  { title: "カルペ・ディエム" },
-  { title: "アンチ・サニーデイズ・カレンダー" },
-  { title: "Vivid-day Happy-day Boost!" },
-  { title: "八躯モ断ツ剣ノ傍デ" },
-  { title: "私の愛は愛を殺す" },
-  { title: "非対称性のダンス" },
-  { title: "雨に願えば", query: "雨に願えば ワールドダイスター" },
-  { title: "Make New Testament" },
-
-  // 2026-09-30追加（ゲーム内追加 2026/06/30〜07/20、アルバム未収録）
-  { title: "LIVE OUR STAR", query: "LIVE OUR STAR 鳳ここな 静香" },
-  { title: "LIFE IS BEAUTIFUL STAGE", query: "LIFE IS BEAUTIFUL STAGE ワールドダイスター" },
-  { title: "ワールドダイスター！", query: "ワールドダイスター！ 鳳ここな 静香" },
+  // Vol.12「Faith in Expression Act-3」全13曲（YouTube Music配信順）
+  { title: "Make New Testament", id: "JswoiQrtns4" },
+  { title: "八躯モ断ツ剣ノ傍デ", id: "Hpi7yOV7VBg" },
+  { title: "私の愛は愛を殺す", id: "XwO2ZLMyf_A" },
+  { title: "アンチ・サニーデイズ・カレンダー", id: "AN11b6d0iXw" },
+  { title: "Vivid-day Happy-day Boost!", id: "4hnaXgUy7rM" },
+  { title: "非対称性のダンス", id: "x7pxrmDQqIU" },
+  { title: "雨に願えば", id: "DwLvuOPfkPs" },
+  { title: "カルペ・ディエム", id: "lWqsUzeJEe4" },
+  { title: "Worlds Dye Star（連尺野初魅ソロ）", id: "v9oYYvPOQ5w" },
+  { title: "LIVE OUR STAR", id: "9ZqGAgptFp4" },
+  { title: "LIFE IS BEAUTIFUL STAGE", id: "ojv4kinYKE0" },
+  { title: "ワールドダイスター！", id: "J2d_ROcUOwY" },
+  { title: "Worlds Dye Star（5人歌唱）", id: "Vsb9BrnIjQk" },
 
 ];
 
@@ -419,8 +419,8 @@ function sleep(ms) {
 }
 
 async function main() {
-  if (TRACKS.length !== 166) {
-    console.warn(`[warn] track count is ${TRACKS.length}, expected 166`);
+  if (TRACKS.length !== 168) {
+    console.warn(`[warn] track count is ${TRACKS.length}, expected 168`);
   }
 
   const existing = loadExistingIds();
@@ -436,9 +436,8 @@ async function main() {
     const track = TRACKS[i];
     const n = i + 1;
     const cached = cache[track.title];
-    let id = "";
-    if (existing[n - 1]) id = existing.get(track.title);
-    else if (cached?.id && cached.score >= 40 && !cached.note) id = cached.id;
+    let id = track.id || existing[i] || "";
+    if (!id && cached?.id && cached.score >= 40 && !cached.note) id = cached.id;
 
     if (!id && !track.skipSearch) {
       const query = track.query || `${track.title} ワールドダイスター`;
